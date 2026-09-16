@@ -98,3 +98,39 @@ CREATE TABLE quotation_items (
         FOREIGN KEY (product_id)
         REFERENCES products(id)
 );
+
+CREATE TABLE sales_orders (
+    id SERIAL PRIMARY KEY,
+    order_number VARCHAR(50) UNIQUE NOT NULL,
+    quotation_id INTEGER UNIQUE NOT NULL,
+    customer_id INTEGER NOT NULL,
+    order_date DATE NOT NULL DEFAULT CURRENT_DATE,
+    total_amount NUMERIC(12, 2) NOT NULL CHECK (total_amount >= 0),
+    status VARCHAR(20) NOT NULL DEFAULT 'PENDING'
+        CHECK (status IN ('PENDING', 'CONFIRMED', 'DISPATCHED', 'CANCELLED')),
+
+    CONSTRAINT fk_sales_order_quotation
+        FOREIGN KEY (quotation_id)
+        REFERENCES quotations(id),
+
+    CONSTRAINT fk_sales_order_customer
+        FOREIGN KEY (customer_id)
+        REFERENCES customers(id)
+);
+
+CREATE TABLE sales_order_items (
+    id SERIAL PRIMARY KEY,
+    sales_order_id INTEGER NOT NULL,
+    product_id INTEGER NOT NULL,
+    quantity INTEGER NOT NULL CHECK (quantity > 0),
+    unit_price NUMERIC(12, 2) NOT NULL CHECK (unit_price >= 0),
+
+    CONSTRAINT fk_sales_order_item_order
+        FOREIGN KEY (sales_order_id)
+        REFERENCES sales_orders(id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT fk_sales_order_item_product
+        FOREIGN KEY (product_id)
+        REFERENCES products(id)
+);
