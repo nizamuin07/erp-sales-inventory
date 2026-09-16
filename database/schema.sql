@@ -63,3 +63,38 @@ CREATE TABLE enquiry_items (
         FOREIGN KEY (product_id)
         REFERENCES products(id)
 );
+
+CREATE TABLE quotations (
+    id SERIAL PRIMARY KEY,
+    quotation_number VARCHAR(50) UNIQUE NOT NULL,
+    enquiry_id INTEGER NOT NULL,
+    valid_until DATE,
+    status VARCHAR(20) NOT NULL DEFAULT 'DRAFT'
+        CHECK (status IN ('DRAFT', 'SENT', 'ACCEPTED', 'REJECTED')),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_quotation_enquiry
+        FOREIGN KEY (enquiry_id)
+        REFERENCES enquiries(id)
+);
+
+CREATE TABLE quotation_items (
+    id SERIAL PRIMARY KEY,
+    quotation_id INTEGER NOT NULL,
+    product_id INTEGER NOT NULL,
+    quantity INTEGER NOT NULL CHECK (quantity > 0),
+    unit_price NUMERIC(12, 2) NOT NULL CHECK (unit_price >= 0),
+    discount_percent NUMERIC(5, 2) NOT NULL DEFAULT 0
+        CHECK (discount_percent >= 0 AND discount_percent <= 100),
+    gst_percent NUMERIC(5, 2) NOT NULL DEFAULT 0
+        CHECK (gst_percent >= 0),
+
+    CONSTRAINT fk_quotation_item_quotation
+        FOREIGN KEY (quotation_id)
+        REFERENCES quotations(id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT fk_quotation_item_product
+        FOREIGN KEY (product_id)
+        REFERENCES products(id)
+);
