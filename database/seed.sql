@@ -17,3 +17,19 @@ VALUES
 (4, 250, 0),
 (5, 100, 0),
 (6, 50, 0);
+
+-- Seed users
+INSERT INTO users (name, email, password_hash, role)
+VALUES
+(
+    'Admin User',
+    'admin@example.com',
+    '$2b$10$z4UD0saS.fz3oxxUgL9YV.Ipa1BVIAL0UqL0IK.El0tXYYUn9FMe',
+    'ADMIN'
+),
+(
+    'Sales User',
+    'sales@example.com',
+    '$2b$10$qievFYBYBYm0gmy/1/S8q.KNn0hTwd86CUek2uFfDVsa3JMZdux0m',
+    'SALES_USER'
+);
