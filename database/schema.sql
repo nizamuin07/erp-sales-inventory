@@ -134,3 +134,14 @@ CREATE TABLE sales_order_items (
         FOREIGN KEY (product_id)
         REFERENCES products(id)
 );
+
+CREATE TABLE dispatches (
+    id SERIAL PRIMARY KEY,
+    sales_order_id INTEGER UNIQUE NOT NULL,
+    dispatch_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    quantity_dispatched INTEGER NOT NULL CHECK (quantity_dispatched > 0),
+
+    CONSTRAINT fk_dispatch_sales_order
+        FOREIGN KEY (sales_order_id)
+        REFERENCES sales_orders(id)
+);
