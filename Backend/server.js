@@ -5,6 +5,8 @@ require("dotenv").config();
 const pool = require("./config/db");
 const authRoutes = require("./routes/authRoutes");
 const testRoutes = require("./routes/testRoutes");
+const customerRoutes = require("./routes/customerRoutes");
+const enquiryRoutes = require("./routes/enquiryRoutes");
 
 const app = express();
 
@@ -13,6 +15,8 @@ app.use(express.json());
 
 app.use("/api/auth", authRoutes);
 app.use("/api/test", testRoutes);
+app.use("/api/customers", customerRoutes);
+app.use("/api/enquiries", enquiryRoutes);
 
 app.get("/", (req, res) => {
   res.json({
